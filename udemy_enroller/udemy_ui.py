@@ -168,7 +168,7 @@ class UdemyActionsUI:
 
             # Enroll Now 2
             enroll_button_xpath = (
-                "//div[contains(@class, 'styles--checkout-pane-outer')]//button"
+                "//*[contains(text(),'Free Purchase')]"
             )
             element_present = EC.presence_of_element_located(
                 (
@@ -308,36 +308,36 @@ class UdemyActionsUI:
 
     def _check_price(self, course_name):
         course_is_free = True
-        price_xpath = "//div[contains(@class, 'styles--checkout-pane-outer')]//span[@data-purpose='total-price']//span"
-        price_element = self.driver.find_element_by_xpath(price_xpath)
+        # price_xpath = "//div[contains(@class, 'styles--checkout-pane-outer')]//span[@data-purpose='total-price']//span"
+        # price_element = self.driver.find_element_by_xpath(price_xpath)
 
         # We are only interested in the element which is displaying the price details
-        if price_element.is_displayed():
-            _price = price_element.text
+        # if price_element.is_displayed():
+        #     _price = price_element.text
             # This logic should work for different locales and currencies
-            checkout_price = Price.fromstring(_price)
+        #     checkout_price = Price.fromstring(_price)
 
-            # Set the currency for stats
-            if (
-                self.stats.currency_symbol is None
-                and checkout_price.currency is not None
-            ):
-                self.stats.currency_symbol = checkout_price.currency
+        #     # Set the currency for stats
+        #     if (
+        #         self.stats.currency_symbol is None
+        #         and checkout_price.currency is not None
+        #     ):
+        #         self.stats.currency_symbol = checkout_price.currency
 
-            if checkout_price.amount is None or checkout_price.amount > 0:
-                logger.debug(
-                    f"Skipping course '{course_name}' as it now costs {_price}"
-                )
-                self.stats.expired += 1
-                course_is_free = False
+        #     if checkout_price.amount is None or checkout_price.amount > 0:
+        #         logger.debug(
+        #             f"Skipping course '{course_name}' as it now costs {_price}"
+        #         )
+        #         self.stats.expired += 1
+        #         course_is_free = False
 
         # Get the listed price of the course for stats
-        if course_is_free:
-            list_price_xpath = "//div[contains(@class, 'styles--checkout-pane-outer')]//td[@data-purpose='list-price']//span"
-            list_price_element = self.driver.find_element_by_xpath(list_price_xpath)
-            list_price = Price.fromstring(list_price_element.text)
-            if list_price.amount is not None:
-                self.stats.prices.append(list_price.amount)
+        # if course_is_free:
+        #     list_price_xpath = "//div[contains(@class, 'styles--checkout-pane-outer')]//td[@data-purpose='list-price']//span"
+        #     list_price_element = self.driver.find_element_by_xpath(list_price_xpath)
+        #     list_price = Price.fromstring(list_price_element.text)
+        #     if list_price.amount is not None:
+        #         self.stats.prices.append(list_price.amount)
         return course_is_free
 
     def _check_if_robot(self) -> bool:

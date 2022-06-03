@@ -1,10 +1,10 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.core.utils import ChromeType
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager, IEDriverManager
 from webdriver_manager.opera import OperaDriverManager
-from webdriver_manager.utils import ChromeType
 
 from udemy_enroller.logging import get_logger
 
@@ -17,14 +17,7 @@ VALID_INTERNET_EXPLORER_STRINGS = {"internet_explorer", "ie"}
 VALID_OPERA_STRINGS = {"opera"}
 VALID_EDGE_STRINGS = {"edge"}
 
-ALL_VALID_BROWSER_STRINGS = (
-    VALID_FIREFOX_STRINGS.union(VALID_CHROME_STRINGS)
-    .union(VALID_CHROMIUM_STRINGS)
-    .union(VALID_CHROMIUM_STRINGS)
-    .union(VALID_INTERNET_EXPLORER_STRINGS)
-    .union(VALID_OPERA_STRINGS)
-    .union(VALID_EDGE_STRINGS)
-)
+ALL_VALID_BROWSER_STRINGS = VALID_CHROME_STRINGS.union(VALID_CHROMIUM_STRINGS)
 
 
 class DriverManager:

@@ -97,8 +97,6 @@ class UdemyActions:
 
     HEADERS = {
         "origin": "https://www.udemy.com",
-        "user-agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 "
-        "Safari/537.36",
         "accept": "application/json, text/plain, */*",
         "accept-encoding": "gzip, deflate, br",
         "content-type": "application/json;charset=UTF-8",
@@ -111,7 +109,7 @@ class UdemyActions:
         self.settings = settings
         self.user_has_preferences = self.settings.categories or self.settings.languages
         self.session = requests.Session()
-        self.udemy_scraper = create_scraper()
+        self.udemy_scraper = create_scraper(ecdhCurve="secp384r1")
         self._cookie_file = os.path.join(get_app_dir(), cookie_file_name)
         self._enrolled_course_info = []
         self._all_course_ids = []
@@ -131,11 +129,10 @@ class UdemyActions:
         if cookie_details is None:
             response = self.udemy_scraper.get(self.LOGIN_URL)
             soup = BeautifulSoup(response.content, "html.parser")
-            csrf_token = soup.find("input", {"name": "csrfmiddlewaretoken"}).get(
-                "value"
-            )
+            csrf_element = soup.find("input", {"name": "csrfmiddlewaretoken"}) or {}
+            csrf_token = csrf_element.get("value")
             if csrf_token is None:
-                raise Exception(f"Unable to get csrf_token")
+                raise Exception("Unable to get csrf_token")
 
             # Prompt for email/password if we don't have them saved in settings
             if self.settings.email is None:
